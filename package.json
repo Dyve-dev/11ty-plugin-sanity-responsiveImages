@@ -1,0 +1,38 @@
+{
+  "name": "@dyve/11ty-plugin-sanity-responsiveimage",
+  "version": "1.0.0",
+  "description": "@11ty shortcode outpus reponsive &lt;img> tag with srcset attribute using the sanity.io CDN",
+  "main": "plugin/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dyve-dev/11ty-plugin-sanity-responsiveImages.git"
+  },
+  "keywords": [
+    "11ty",
+    "eleventy",
+    "responsive",
+    "img",
+    "sanity.io",
+    "cdn",
+    "dyve.dev"
+  ],
+  "author": "dyve.dev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dyve-dev/11ty-plugin-sanity-responsiveImages/issues"
+  },
+  "homepage": "https://github.com/Dyve-dev/11ty-plugin-sanity-responsiveImages#readme",
+  "devDependencies": {
+    "@sanity/client": "^2.1.4",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^14.14.22"
+  },
+  "dependencies": {
+    "@sanity/image-url": "^0.140.19",
+    "debug": "^4.3.1"
+  }
+}
