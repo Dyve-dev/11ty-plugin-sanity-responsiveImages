@@ -47,6 +47,33 @@ class ResponsiveImage {
     return this.originalSize(this.ImageBuilder.image(source));
   }
 
+  private aspectRatio(image: ImageUrlBuilder, ratio: Options['aspectRatio']) {
+    switch (true) {
+      case ratio === '1/1':
+        if (image.options.width) {
+          return image.height(image.options.width);
+        } else if (this.original.w) {
+          return image.height(this.original.w);
+        }
+      default:
+        return image;
+    }
+  }
+
+  private build(image: ImageUrlBuilder, options: Options) {
+    let _image: ImageUrlBuilder = image;
+    if (options.aspectRatio && _image.options.width) {
+      _image = this.aspectRatio(_image, options.aspectRatio);
+    }
+    if (options.crop) {
+      _image = _image.crop(options.crop);
+    }
+    if (options.fit) {
+      _image = _image.fit(options.fit);
+    }
+    return _image;
+  }
+
   responsivePicture(image: SanityImageSource, options: Options = defaults) {
     let Image: ImageUrlBuilder = this.imageFromSource(image);
     const sizeArray = options.srcs.split(',');
@@ -54,48 +81,16 @@ class ResponsiveImage {
     const sizes = options.sizes;
     const lastSize = sizeArray[sizeArray.length - 1];
     let baseUrl: string | null = '';
-    switch (true) {
-      case Boolean(options.aspectRatio):
-        switch (true) {
-          case options.aspectRatio === '1/1':
-            if (this.original.w) {
-              Image = Image.height(this.original.w);
-            }
-            break;
-        }
-      case Boolean(options.crop):
-        //@ts-ignore
-        Image = Image.crop(options.crop);
-        break;
-      default:
-        break;
-    }
+    Image = this.build(Image, options);
 
-    baseUrl = Image.fit(options.fit).url();
+    baseUrl = Image.url();
     const srcSetContent = sizeArray
       .map((size) => {
         let url: string | null;
         let _image = this.imageFromSource(image);
-        switch (true) {
-          case Boolean(options.aspectRatio):
-            switch (true) {
-              case options.aspectRatio === '1/1':
-                if (this.original.w) {
-                  _image = _image.height(this.original.w);
-                }
-                break;
-              default:
-                break;
-            }
-
-          case Boolean(options.crop):
-            _image = _image
-              //@ts-ignore
-              .crop(options.crop);
-          default:
-            _image = _image.width(parseInt(size));
-        }
-        url = _image.fit(options.fit).auto('format').url();
+        _image = _image.width(parseInt(size));
+        _image = this.build(_image, options);
+        url = _image.auto('format').url();
         return `${url} ${size}w`;
       })
       .join(',');
