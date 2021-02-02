@@ -1,6 +1,6 @@
 {
   "name": "@dyve/11ty-plugin-sanity-responsiveimage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "@11ty shortcode outputs responsive <img> tag with srcset attribute using the sanity.io CDN",
   "main": "plugin/index.js",
   "scripts": {
