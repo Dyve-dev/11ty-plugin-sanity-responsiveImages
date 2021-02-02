@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/Dyve-dev/11ty-plugin-sanity-responsiveImages#readme",
   "devDependencies": {
-    "@sanity/client": "^2.1.4",
+    "@sanity/client": "^2.2.6",
     "@types/debug": "^4.1.5",
     "@types/node": "^14.14.22"
   },
