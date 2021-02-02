@@ -6,7 +6,7 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import urlBuilder from '@sanity/image-url/lib/types';
 import { shortCodeConfig, Options } from './types';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
-import url from 'url';
+import { URL } from 'url';
 const imageUrl: typeof urlBuilder = require('@sanity/image-url');
 
 const defaults: Options = {
@@ -30,8 +30,8 @@ class ResponsiveImage {
 
   private originalSize(image: ImageUrlBuilder) {
     const regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
-    let URL = url.parse(image.options.source?.toString() || '');
-    const parts = URL.path?.split('/') || [];
+    let _url = new URL(image.options.source?.toString() || '');
+    const parts = _url.pathname?.split('/') || [];
     const imageIdentifier = parts[parts?.length - 1];
     const groups = imageIdentifier.match(regex)?.groups;
     if (groups) {
@@ -80,6 +80,7 @@ class ResponsiveImage {
     const classList = options.classList;
     const sizes = options.sizes;
     const lastSize = sizeArray[sizeArray.length - 1];
+    const alt = options.alt ? options.alt : '';
     let baseUrl: string | null = '';
     Image = this.build(Image, options);
 
@@ -95,12 +96,19 @@ class ResponsiveImage {
       })
       .join(',');
 
-    return `<img 
-                    src="${baseUrl}"
-                    ${classList ? 'class="' + classList + '"' : ''}
-                    srcset="${srcSetContent}"
-                    sizes="${sizes}"
-                    width="${lastSize.trim()}">`;
+    let html = `<img 
+      src="${baseUrl}"
+      ${classList ? 'class="' + classList + '"' : ''}
+      srcset="${srcSetContent}"
+      sizes="${sizes}"
+      width="${lastSize.trim()}"`;
+
+    if (alt && alt.length > 0) {
+      html += `alt="${alt}">`;
+    } else {
+      html += '>';
+    }
+    return html;
   }
 }
 

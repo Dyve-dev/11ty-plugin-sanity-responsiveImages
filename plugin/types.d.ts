@@ -12,5 +12,6 @@ export interface Options {
     classList: string;
     crop?: CropMode;
     fit: FitMode;
+    alt?: string;
     aspectRatio?: '1/1';
 }

@@ -1,9 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const url_1 = __importDefault(require("url"));
+const url_1 = require("url");
 const imageUrl = require('@sanity/image-url');
 const defaults = {
     srcs: '320,640,900,1980',
@@ -24,8 +21,8 @@ class ResponsiveImage {
     originalSize(image) {
         var _a, _b, _c;
         const regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
-        let URL = url_1.default.parse(((_a = image.options.source) === null || _a === void 0 ? void 0 : _a.toString()) || '');
-        const parts = ((_b = URL.path) === null || _b === void 0 ? void 0 : _b.split('/')) || [];
+        let _url = new url_1.URL(((_a = image.options.source) === null || _a === void 0 ? void 0 : _a.toString()) || '');
+        const parts = ((_b = _url.pathname) === null || _b === void 0 ? void 0 : _b.split('/')) || [];
         const imageIdentifier = parts[(parts === null || parts === void 0 ? void 0 : parts.length) - 1];
         const groups = (_c = imageIdentifier.match(regex)) === null || _c === void 0 ? void 0 : _c.groups;
         if (groups) {
@@ -71,6 +68,7 @@ class ResponsiveImage {
         const classList = options.classList;
         const sizes = options.sizes;
         const lastSize = sizeArray[sizeArray.length - 1];
+        const alt = options.alt ? options.alt : '';
         let baseUrl = '';
         Image = this.build(Image, options);
         baseUrl = Image.url();
@@ -84,12 +82,19 @@ class ResponsiveImage {
             return `${url} ${size}w`;
         })
             .join(',');
-        return `<img 
-                    src="${baseUrl}"
-                    ${classList ? 'class="' + classList + '"' : ''}
-                    srcset="${srcSetContent}"
-                    sizes="${sizes}"
-                    width="${lastSize.trim()}">`;
+        let html = `<img 
+      src="${baseUrl}"
+      ${classList ? 'class="' + classList + '"' : ''}
+      srcset="${srcSetContent}"
+      sizes="${sizes}"
+      width="${lastSize.trim()}"`;
+        if (alt && alt.length > 0) {
+            html += `alt="${alt}">`;
+        }
+        else {
+            html += '>';
+        }
+        return html;
     }
 }
 exports.default = {
