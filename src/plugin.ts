@@ -2,12 +2,24 @@
  * Eleventy shortcode leveraging Sanity.io images CDN to return a responsive
  * image with srcset
  */
-import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import {
+  SanityAsset,
+  SanityImageObject,
+  SanityImageSource,
+  SanityImageWithAssetStub,
+  SanityReference,
+} from '@sanity/image-url/lib/types/types';
 import urlBuilder from '@sanity/image-url/lib/types';
 import { shortCodeConfig, Options } from './types';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
 import { URL } from 'url';
 const imageUrl: typeof urlBuilder = require('@sanity/image-url');
+
+interface WithType {
+  _type: string;
+}
+
+//= {_type: string} & SanityImageObject;
 
 const defaults: Options = {
   srcs: '320,640,900,1980',
@@ -29,16 +41,35 @@ class ResponsiveImage {
   }
 
   private originalSize(image: ImageUrlBuilder) {
-    const regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
-    let _url = new URL(image.options.source?.toString() || '');
-    const parts = _url.pathname?.split('/') || [];
-    const imageIdentifier = parts[parts?.length - 1];
-    const groups = imageIdentifier.match(regex)?.groups;
-    if (groups) {
-      this.original.uid = groups['uid'];
-      this.original.w = parseInt(groups['w']);
-      this.original.h = parseInt(groups['h']);
-      this.original.ext = groups['ext'];
+    /**
+     * A lot of assumptions in this code. Will probably break at some point
+     */
+    let regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
+    let imageIdentifier = '';
+    try {
+      if (typeof image.options.source === 'string') {
+        let _url = new URL(image.options.source);
+        const parts = _url.pathname?.split('/') || [];
+        imageIdentifier = parts[parts?.length - 1];
+      } else if (typeof image.options.source === 'object') {
+        const source = image.options.source;
+        if ((source as WithType)._type === 'image') {
+          if (((source as SanityImageObject).asset as WithType)._type === 'reference') {
+            imageIdentifier = (source as SanityImageObject).asset._ref;
+            regex = /(?<prefix>[\w]+)\-(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\-(?<ext>[\w]{3,4})/;
+          }
+        }
+      }
+      const groups = imageIdentifier.match(regex)?.groups;
+      if (groups) {
+        this.original.uid = groups['uid'];
+        this.original.w = parseInt(groups['w']);
+        this.original.h = parseInt(groups['h']);
+        this.original.ext = groups['ext'];
+      }
+    } catch (err) {
+      console.error(err);
+      console.error('This had to happen at some point!');
     }
 
     return image;
