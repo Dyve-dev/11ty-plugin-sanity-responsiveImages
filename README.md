@@ -76,10 +76,10 @@ generates
 <img
   src="https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?fit=crop"
   srcset="
-    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&amp;w=420&amp;h=420&amp;fit=crop&amp;auto=format    420w,
-    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&amp;w=600&amp;h=600&amp;fit=crop&amp;auto=format    600w,
-    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&amp;w=900&amp;h=900&amp;fit=crop&amp;auto=format    900w,
-    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&amp;w=1024&amp;h=1024&amp;fit=crop&amp;auto=format 1024w
+    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&w=420&h=420&fit=crop&auto=format    420w,
+    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&w=600&h=600&fit=crop&auto=format    600w,
+    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&w=900&h=900&fit=crop&auto=format    900w,
+    https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg?rect=160,0,640,640&w=1024&h=1024&fit=crop&auto=format 1024w
   "
   sizes="100vw"
   width="1024"
