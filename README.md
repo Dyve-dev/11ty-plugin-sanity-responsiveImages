@@ -58,9 +58,16 @@ With a sanity CDN url:
 
 ```js
 {
-    srcs: "420,600",            // string: comma separated list of image width. Note: the last width will be used as `width` attribute on the <img> tag
-    aspectRatio: "1/1",         // currently only "1/1" is implemented. Will respect 1/1 aspect ratio if image has different width and height. Height will be forced to width
-    alt: "alternative text"     // defines the `alt` attribute on the <img> tag
+    // string: comma separated list of image width. Note: the last width will be used as `width` attribute on the <img> tag
+    srcs: "420,600",
+    // currently only "1/1" is implemented. Will respect 1/1 aspect ratio if image has different width and height. Height will be forced to width
+    aspectRatio: "1/1",
+    // defines the `alt` attribute on the <img> tag
+    alt: "alternative text"
+    // string: css class to add
+    classList: "cls1 cls2"
+    // element style
+    style: "width: 50px;"
 }
 ```
 
