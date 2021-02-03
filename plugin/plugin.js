@@ -85,15 +85,17 @@ class ResponsiveImage {
         return _image;
     }
     responsivePicture(image, options = defaults) {
+        let baseUrl = '';
         let Image = this.imageFromSource(image);
+        Image = this.build(Image, options);
+        baseUrl = Image.url();
         const sizeArray = options.srcs.split(',');
         const classList = options.classList;
         const sizes = options.sizes;
+        const style = options.style;
         const lastSize = sizeArray[sizeArray.length - 1];
+        const width = lastSize.trim();
         const alt = options.alt ? options.alt : '';
-        let baseUrl = '';
-        Image = this.build(Image, options);
-        baseUrl = Image.url();
         const srcSetContent = sizeArray
             .map((size) => {
             let url;
@@ -109,13 +111,11 @@ class ResponsiveImage {
       ${classList ? 'class="' + classList + '"' : ''}
       srcset="${srcSetContent}"
       sizes="${sizes}"
-      width="${lastSize.trim()}"`;
-        if (alt && alt.length > 0) {
-            html += `alt="${alt}">`;
-        }
-        else {
-            html += '>';
-        }
+      width="${width}"
+      height="${width}"
+      ${style ? 'style="' + style + '"' : ''}
+      ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
+      >`;
         return html;
     }
 }

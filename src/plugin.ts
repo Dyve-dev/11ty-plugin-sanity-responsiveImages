@@ -2,13 +2,7 @@
  * Eleventy shortcode leveraging Sanity.io images CDN to return a responsive
  * image with srcset
  */
-import {
-  SanityAsset,
-  SanityImageObject,
-  SanityImageSource,
-  SanityImageWithAssetStub,
-  SanityReference,
-} from '@sanity/image-url/lib/types/types';
+import { SanityImageObject, SanityImageSource } from '@sanity/image-url/lib/types/types';
 import urlBuilder from '@sanity/image-url/lib/types';
 import { shortCodeConfig, Options } from './types';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
@@ -106,16 +100,18 @@ class ResponsiveImage {
   }
 
   responsivePicture(image: SanityImageSource, options: Options = defaults) {
+    let baseUrl: string | null = '';
     let Image: ImageUrlBuilder = this.imageFromSource(image);
+    Image = this.build(Image, options);
+    baseUrl = Image.url();
     const sizeArray = options.srcs.split(',');
     const classList = options.classList;
     const sizes = options.sizes;
+    const style = options.style;
     const lastSize = sizeArray[sizeArray.length - 1];
+    const width = lastSize.trim();
     const alt = options.alt ? options.alt : '';
-    let baseUrl: string | null = '';
-    Image = this.build(Image, options);
 
-    baseUrl = Image.url();
     const srcSetContent = sizeArray
       .map((size) => {
         let url: string | null;
@@ -132,13 +128,12 @@ class ResponsiveImage {
       ${classList ? 'class="' + classList + '"' : ''}
       srcset="${srcSetContent}"
       sizes="${sizes}"
-      width="${lastSize.trim()}"`;
+      width="${width}"
+      height="${width}"
+      ${style ? 'style="' + style + '"' : ''}
+      ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
+      >`;
 
-    if (alt && alt.length > 0) {
-      html += `alt="${alt}">`;
-    } else {
-      html += '>';
-    }
     return html;
   }
 }
