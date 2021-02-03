@@ -92,6 +92,7 @@ class ResponsiveImage {
         const sizeArray = options.srcs.split(',');
         const classList = options.classList;
         const sizes = options.sizes;
+        const style = options.style;
         const lastSize = sizeArray[sizeArray.length - 1];
         const width = lastSize.trim();
         const alt = options.alt ? options.alt : '';
@@ -112,6 +113,7 @@ class ResponsiveImage {
       sizes="${sizes}"
       width="${width}"
       height="${width}"
+      ${style ? 'style="' + style + '"' : ''}
       ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
       >`;
         return html;
