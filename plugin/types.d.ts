@@ -14,4 +14,5 @@ export interface Options {
     fit: FitMode;
     alt?: string;
     aspectRatio?: '1/1';
+    class?: string;
 }

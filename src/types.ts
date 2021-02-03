@@ -10,7 +10,7 @@ export interface shortCodeConfig {
 export interface Options {
   srcs: string;
   sizes: string;
-  classList: string;
+  classList?: string;
   crop?: CropMode;
   fit: FitMode;
   alt?: string; // alternative text
