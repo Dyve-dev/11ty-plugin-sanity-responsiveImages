@@ -15,4 +15,5 @@ export interface Options {
     alt?: string;
     aspectRatio?: '1/1';
     style?: string;
+    lazy: boolean;
 }

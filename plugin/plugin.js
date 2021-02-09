@@ -8,6 +8,7 @@ const defaults = {
     sizes: '100vw',
     classList: '',
     fit: 'crop',
+    lazy: true,
 };
 class ResponsiveImage {
     constructor(options) {
@@ -85,23 +86,25 @@ class ResponsiveImage {
         return _image;
     }
     responsivePicture(image, options = defaults) {
+        const _options = { ...defaults, ...options };
         let baseUrl = '';
         let Image = this.imageFromSource(image);
-        Image = this.build(Image, options);
+        Image = this.build(Image, _options);
         baseUrl = Image.url();
-        const sizeArray = options.srcs.split(',');
-        const classList = options.classList;
-        const sizes = options.sizes;
-        const style = options.style;
+        const sizeArray = _options.srcs.split(',');
+        const classList = _options.classList;
+        const sizes = _options.sizes;
+        const style = _options.style;
         const lastSize = sizeArray[sizeArray.length - 1];
         const width = lastSize.trim();
-        const alt = options.alt ? options.alt : '';
+        const alt = _options.alt ? _options.alt : '';
+        const lazy = _options.lazy;
         const srcSetContent = sizeArray
             .map((size) => {
             let url;
             let _image = this.imageFromSource(image);
             _image = _image.width(parseInt(size));
-            _image = this.build(_image, options);
+            _image = this.build(_image, _options);
             url = _image.auto('format').url();
             return `${url} ${size}w`;
         })
@@ -115,6 +118,7 @@ class ResponsiveImage {
       height="${width}"
       ${style ? 'style="' + style + '"' : ''}
       ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
+      ${lazy ? 'loading="lazy"' : ''}
       >`;
         return html;
     }

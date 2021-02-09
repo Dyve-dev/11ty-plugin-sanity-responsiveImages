@@ -16,4 +16,5 @@ export interface Options {
   alt?: string; // alternative text
   aspectRatio?: '1/1'; // will use same width and height
   style?: string;
+  lazy: boolean;
 }
