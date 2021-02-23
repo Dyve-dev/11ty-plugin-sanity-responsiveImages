@@ -16,4 +16,6 @@ export interface Options {
     aspectRatio?: '1/1';
     style?: string;
     lazy: boolean;
+    width?: number;
+    height?: number;
 }

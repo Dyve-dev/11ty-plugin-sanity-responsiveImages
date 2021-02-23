@@ -96,7 +96,8 @@ class ResponsiveImage {
         const sizes = _options.sizes;
         const style = _options.style;
         const lastSize = sizeArray[sizeArray.length - 1];
-        const width = lastSize.trim();
+        const width = _options.width ? _options.width : lastSize.trim();
+        const height = _options.height ? _options.height : width;
         const alt = _options.alt ? _options.alt : '';
         const lazy = _options.lazy;
         const srcSetContent = sizeArray
@@ -115,7 +116,7 @@ class ResponsiveImage {
       srcset="${srcSetContent}"
       sizes="${sizes}"
       width="${width}"
-      height="${width}"
+      height="${height}"
       ${style ? 'style="' + style + '"' : ''}
       ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
       ${lazy ? 'loading="lazy"' : ''}
