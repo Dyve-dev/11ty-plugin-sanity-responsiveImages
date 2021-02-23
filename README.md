@@ -54,8 +54,6 @@ With a sanity CDN url:
 
 ### shortCode options
 
--**srcs**: `string`
-
 ```js
 {
     // string: comma separated list of image width. Note: the last width will be used as `width` attribute on the <img> tag
