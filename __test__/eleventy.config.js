@@ -1,5 +1,6 @@
 const plugin = require('../plugin');
 
+const client = require('./sanityClient');
 const defaultDirStructure = {
   input: '.',
   includes: '_includes',
@@ -9,7 +10,7 @@ const defaultDirStructure = {
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.setUseGitIgnore(false);
-  eleventyConfig.addPlugin(plugin, { });
+  eleventyConfig.addPlugin(plugin, { client });
 
   return {
     templateFormats: ['njk'],

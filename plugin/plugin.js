@@ -29,7 +29,14 @@ class ResponsiveImage {
         let imageIdentifier = '';
         try {
             if (typeof image.options.source === 'string') {
-                let _url = new url_1.URL(image.options.source);
+                let _url;
+                const base = 'https://cdn.sanity.io';
+                try {
+                    _url = new url_1.URL(image.options.source);
+                }
+                catch (err) {
+                    _url = new url_1.URL(image.options.source, base);
+                }
                 const parts = ((_a = _url.pathname) === null || _a === void 0 ? void 0 : _a.split('/')) || [];
                 imageIdentifier = parts[(parts === null || parts === void 0 ? void 0 : parts.length) - 1];
             }

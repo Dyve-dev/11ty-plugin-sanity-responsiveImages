@@ -18,7 +18,7 @@ describe('PLUGIN', () => {
     });
   });
   it('eleventy should run', (done) => {
-    const eleventy = spawn('npx', ['eleventy']);
+    const eleventy = spawn('npx', ['eleventy', '--config', 'eleventy.config.js', '--quiet']);
     eleventy.on('close', (code) => {
       code.should.equal(0);
       done();

@@ -6,7 +6,7 @@ import { SanityImageObject, SanityImageSource } from '@sanity/image-url/lib/type
 import urlBuilder from '@sanity/image-url/lib/types';
 import { shortCodeConfig, Options } from './types';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
-import { URL } from 'url';
+import url, { URL } from 'url';
 const imageUrl: typeof urlBuilder = require('@sanity/image-url');
 
 interface WithType {
@@ -43,7 +43,14 @@ class ResponsiveImage {
     let imageIdentifier = '';
     try {
       if (typeof image.options.source === 'string') {
-        let _url = new URL(image.options.source);
+        let _url: URL;
+        const base = 'https://cdn.sanity.io';
+        try {
+          _url = new URL(image.options.source);
+        } catch (err) {
+          _url = new URL(image.options.source, base);
+        }
+
         const parts = _url.pathname?.split('/') || [];
         imageIdentifier = parts[parts?.length - 1];
       } else if (typeof image.options.source === 'object') {
