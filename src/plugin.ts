@@ -13,7 +13,7 @@ interface WithType {
   _type: string;
 }
 
-//= {_type: string} & SanityImageObject;
+const SANITY_CDN_URL = 'https://cdn.sanity.io';
 
 const defaults: Options = {
   srcs: '320,640,900,1980',
@@ -37,6 +37,8 @@ class ResponsiveImage {
 
   private originalSize(image: ImageUrlBuilder) {
     /**
+     * Tries to infer the original size of the image from it's url.
+     * If it ends with *960x640.jpg for instance.
      * A lot of assumptions in this code. Will probably break at some point
      */
     let regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
@@ -44,11 +46,10 @@ class ResponsiveImage {
     try {
       if (typeof image.options.source === 'string') {
         let _url: URL;
-        const base = 'https://cdn.sanity.io';
         try {
           _url = new URL(image.options.source);
         } catch (err) {
-          _url = new URL(image.options.source, base);
+          _url = new URL(image.options.source, SANITY_CDN_URL);
         }
 
         const parts = _url.pathname?.split('/') || [];

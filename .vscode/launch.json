@@ -19,7 +19,7 @@
             ],
             "skipFiles": [
                 "<node_internals>/**/*.js",
-                "node_modules/@11ty/**/*.js"
+                "../node_modules/@11ty/**/*.js"
             ],
             "env": {
                 "NODE_ENV": "development",
