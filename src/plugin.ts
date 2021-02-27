@@ -22,6 +22,7 @@ const defaults: Options = {
 };
 class ResponsiveImage {
   private ImageBuilder: ImageUrlBuilder;
+  private aspectRatio: number = 1;
 
   constructor(options: shortCodeConfig) {
     this.ImageBuilder = imageUrl(options.client);
@@ -77,6 +78,9 @@ class ResponsiveImage {
     const midSize = sizeArray[Math.floor(sizeArray.length / 2)];
     const width = _options.width ? _options.width : midSize.trim();
     const height = _options.height ? _options.height : width;
+    if (_options.width && _options.height) {
+      this.aspectRatio = _options.width / _options.height;
+    }
     const alt = _options.alt ? _options.alt : '';
     const media = _options.media ? _options.media : '';
     const type = _options.type ? _options.type : '';
@@ -87,6 +91,7 @@ class ResponsiveImage {
         let url: string | null;
         let _image = this.imageFromSource(image);
         _image = _image.width(parseInt(size));
+        _image = _image.height(Math.floor(parseInt(size) / this.aspectRatio));
         _image = this.build(_image, _options);
         url = _image.auto('format').url();
         return `${url} ${size}w`;

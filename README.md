@@ -38,7 +38,7 @@ For more information check the [official documentation](https://www.npmjs.com/pa
 
 ## How to use
 
-In your 11ty templates use the shortCode `responsiveImage`.
+In your 11ty templates use the shortCode `sanityImage`.
 
 With a SanityImageObject:
 
@@ -89,3 +89,8 @@ generates
   alt="my description"
 />
 ```
+
+# Aspect ratio
+
+By default if no `width` and `height` properties are specified the plugin will assume it's a square image.
+If `width`and `height` are specified they will be used to calculate the aspect ratio of the image.
