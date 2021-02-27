@@ -19,4 +19,6 @@ export interface Options {
   lazy: boolean;
   width?: number;
   height?: number;
+  media?: string;
+  type?: string;
 }
