@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const imageUrl = require('@sanity/image-url');
-//= {_type: string} & SanityImageObject;
+const SANITY_CDN_URL = 'https://cdn.sanity.io/';
 const defaults = {
-    srcs: '320,640,900,1980',
+    srcs: '320,640,900',
     sizes: '100vw',
     classList: '',
     fit: 'crop',
@@ -12,71 +12,33 @@ const defaults = {
 };
 class ResponsiveImage {
     constructor(options) {
-        this.original = {
-            uid: '',
-            w: 0,
-            h: 0,
-            ext: '',
-        };
         this.ImageBuilder = imageUrl(options.client);
     }
-    originalSize(image) {
-        var _a, _b;
-        /**
-         * A lot of assumptions in this code. Will probably break at some point
-         */
-        let regex = /(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\.(?<ext>[\w]{3,4})/;
-        let imageIdentifier = '';
-        try {
-            if (typeof image.options.source === 'string') {
-                let _url = new url_1.URL(image.options.source);
-                const parts = ((_a = _url.pathname) === null || _a === void 0 ? void 0 : _a.split('/')) || [];
-                imageIdentifier = parts[(parts === null || parts === void 0 ? void 0 : parts.length) - 1];
+    /**
+     * When the source is a string we need to make sure it is supported by
+     * sanity's `ImageUrl`
+     * @param source
+     */
+    validateSource(source) {
+        var _a;
+        if (typeof source === 'string') {
+            let _url;
+            try {
+                _url = new url_1.URL(source);
             }
-            else if (typeof image.options.source === 'object') {
-                const source = image.options.source;
-                if (source._type === 'image') {
-                    if (source.asset._type === 'reference') {
-                        imageIdentifier = source.asset._ref;
-                        regex = /(?<prefix>[\w]+)\-(?<uid>[0-9a-fA-F]+)\-(?<w>[0-9]+)x(?<h>[0-9]+)\-(?<ext>[\w]{3,4})/;
-                    }
-                }
+            catch (err) {
+                _url = new url_1.URL(source, (((_a = this.ImageBuilder.options) === null || _a === void 0 ? void 0 : _a.baseUrl) || SANITY_CDN_URL) +
+                    `/images/${this.ImageBuilder.options.projectId}/${this.ImageBuilder.options.dataset}/`);
             }
-            const groups = (_b = imageIdentifier.match(regex)) === null || _b === void 0 ? void 0 : _b.groups;
-            if (groups) {
-                this.original.uid = groups['uid'];
-                this.original.w = parseInt(groups['w']);
-                this.original.h = parseInt(groups['h']);
-                this.original.ext = groups['ext'];
-            }
+            return _url.toString();
         }
-        catch (err) {
-            console.error(err);
-            console.error('This had to happen at some point!');
-        }
-        return image;
+        return source;
     }
     imageFromSource(source) {
-        return this.originalSize(this.ImageBuilder.image(source));
-    }
-    aspectRatio(image, ratio) {
-        switch (true) {
-            case ratio === '1/1':
-                if (image.options.width) {
-                    return image.height(image.options.width);
-                }
-                else if (this.original.w) {
-                    return image.height(this.original.w);
-                }
-            default:
-                return image;
-        }
+        return this.ImageBuilder.image(this.validateSource(source));
     }
     build(image, options) {
         let _image = image;
-        if (options.aspectRatio && _image.options.width) {
-            _image = this.aspectRatio(_image, options.aspectRatio);
-        }
         if (options.crop) {
             _image = _image.crop(options.crop);
         }
@@ -85,20 +47,22 @@ class ResponsiveImage {
         }
         return _image;
     }
-    responsivePicture(image, options = defaults) {
+    responsivePicture(tag, image, options = defaults) {
         const _options = { ...defaults, ...options };
-        let baseUrl = '';
+        let assetUrl = '';
         let Image = this.imageFromSource(image);
         Image = this.build(Image, _options);
-        baseUrl = Image.url();
+        assetUrl = Image.url();
         const sizeArray = _options.srcs.split(',');
         const classList = _options.classList;
         const sizes = _options.sizes;
         const style = _options.style;
-        const lastSize = sizeArray[sizeArray.length - 1];
-        const width = _options.width ? _options.width : lastSize.trim();
+        const midSize = sizeArray[Math.floor(sizeArray.length / 2)];
+        const width = _options.width ? _options.width : midSize.trim();
         const height = _options.height ? _options.height : width;
         const alt = _options.alt ? _options.alt : '';
+        const media = _options.media ? _options.media : '';
+        const type = _options.type ? _options.type : '';
         const lazy = _options.lazy;
         const srcSetContent = sizeArray
             .map((size) => {
@@ -110,13 +74,15 @@ class ResponsiveImage {
             return `${url} ${size}w`;
         })
             .join(',');
-        let html = `<img 
-      src="${baseUrl}"
+        let html = `<${tag} 
+      src="${assetUrl}"
       ${classList ? 'class="' + classList + '"' : ''}
       srcset="${srcSetContent}"
       sizes="${sizes}"
       width="${width}"
       height="${height}"
+      ${media ? 'media="' + media + '"' : ''}
+      ${type ? 'type="' + type + '"' : ''}
       ${style ? 'style="' + style + '"' : ''}
       ${alt && alt.length > 0 ? 'alt="' + alt + '"' : ''}
       ${lazy ? 'loading="lazy"' : ''}
@@ -128,8 +94,11 @@ exports.default = {
     initArguments: {},
     configFunction: async (eleventyConfig, options) => {
         const R = new ResponsiveImage(options);
-        eleventyConfig.addShortcode('responsiveImage', (image, options = defaults) => {
-            return R.responsivePicture(image, { ...defaults, ...options });
+        eleventyConfig.addShortcode('sanityImage', (image, options = defaults) => {
+            return R.responsivePicture('img', image, { ...defaults, ...options });
+        });
+        eleventyConfig.addShortcode('sanitySource', (image, options = defaults) => {
+            return R.responsivePicture('source', image, { ...defaults, ...options });
         });
     },
 };

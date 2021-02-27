@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+{% sanityImage "https://cdn.sanity.io/images/8bivkoxu/production/c763e4d43ffef64035de83214a2163ee123e75db-720x720.jpg", {srcs:"120,300,420", alt:"test1"} %}
+
+{% sanityImage "https://cdn.sanity.io/images/8bivkoxu/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg", {srcs:"420,600,900", alt:"test2", width: 480, height: 320} %}
+
+{# test with sanity image ref #}
+<picture>
+{% sanityImage "f3533b119b9fe433461316680948eb8fbd53e848-960x640-jpg", {srcs:"420,600,900", alt:"test2"} %}
+</picture>
+
+{% sanityImage "f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg", {srcs:"420,600,900", alt:"test2"} %}
+
+<picture>
+{% sanitySource "f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg", {srcs:"420,600", media:"(orientation: landscape)", alt:"test2"} %}
+</picture>
+
+</body>
+</html>
+

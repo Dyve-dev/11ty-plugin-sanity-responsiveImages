@@ -1,6 +1,6 @@
 # 11ty-plugin-sanity-responsiveImages
 
-@11ty shortcode outpus reponsive &lt;img> tag with srcset attribute using the sanity.io CDN
+@11ty shortcode outputs reponsive &lt;img> tag with srcset attribute using the sanity.io CDN
 
 ## Install
 
@@ -43,13 +43,13 @@ In your 11ty templates use the shortCode `responsiveImage`.
 With a SanityImageObject:
 
 ```
-  {% responsiveImage metadata.hero.image, {srcs:"420,600", alt: metadata.hero.image_desc} %}
+  {% sanityImage metadata.hero.image, {srcs:"420,600", alt: metadata.hero.image_desc} %}
 ```
 
 With a sanity CDN url:
 
 ```
-{% responsiveImage "https://cdn.sanity.io/images/<sanity-project-id>/production/c763e4d43ffef64035de83214a2163ee123e75db-720x720.jpg", {srcs:"420,600,900,1024", aspectRatio: "1/1", alt:"some alternative text"} %}
+{% sanityImage "https://cdn.sanity.io/images/<sanity-project-id>/production/c763e4d43ffef64035de83214a2163ee123e75db-720x720.jpg", {srcs:"420,600,900,1024", alt:"some alternative text"} %}
 ```
 
 ### shortCode options
@@ -58,8 +58,6 @@ With a sanity CDN url:
 {
     // string: comma separated list of image width. Note: the last width will be used as `width` attribute on the <img> tag
     srcs: "420,600",
-    // currently only "1/1" is implemented. Will respect 1/1 aspect ratio if image has different width and height. Height will be forced to width
-    aspectRatio: "1/1",
     // defines the `alt` attribute on the <img> tag
     alt: "alternative text"
     // string: css class to add
@@ -72,7 +70,7 @@ With a sanity CDN url:
 ## Example
 
 ```
-{% responsiveImage "https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg", {srcs:"420,600,900,1024", aspectRatio: "1/1", alt:"my description"} %}
+{% sanityImage "https://cdn.sanity.io/images/XXX/production/f3533b119b9fe433461316680948eb8fbd53e848-960x640.jpg", {srcs:"420,600,900,1024", alt:"my description"} %}
 ```
 
 generates
